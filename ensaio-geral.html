@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ensaio Geral — o Comparativo em três atos</title>
+<meta name="description" content="Jogo de treino da disciplina Fundamentos de Jornalismo (PUC-Campinas, 2026/2): monte a apresentação do Comparativo em três atos e veja a nota pela rubrica.">
+<style>
+:root{--ink:#16202c;--ink2:#233144;--paper:#fff;--tint:#eef2f6;--line:#dce3eb;--muted:#5a6a7c;--red:#d94f3d;--teal:#2e8f8a;--amber:#e8a33d;--ok:#1f7a5c;--bad:#b23b2c}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--tint);color:var(--ink);font:17px/1.55 Calibri,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3{font-family:Cambria,Georgia,"Times New Roman",serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:2rem}h2{font-size:1.5rem}h3{font-size:1.1rem}
+p{margin:0 0 .9em}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 96px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;margin:0 0 14px}
+.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dark .muted{color:#cfd8e3}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--red);margin:0 0 .5em}
+.dark .kicker{color:var(--amber)}
+.muted{color:var(--muted)}.small{font-size:.9rem}
+.btn{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer}
+.btn:hover{border-color:var(--ink2)}
+.btn:focus-visible,.go:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.btn[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.btn .t{display:inline-block;float:right;margin-left:10px;font-size:.82rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.btn[aria-pressed="true"] .t{color:var(--amber)}
+.btn.sem{border-style:dashed}
+.go{font:inherit;font-weight:700;color:#fff;background:var(--red);border:0;border-radius:10px;padding:14px 20px;cursor:pointer;width:100%}
+.go[disabled]{background:#b9c3ce;cursor:not-allowed}
+.go.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.bar{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:10px 16px}
+.bar .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.bar .clock{font:700 1.15rem/1 Cambria,Georgia,serif;white-space:nowrap}
+.bar .lbl{font-size:.78rem;color:#cfd8e3;white-space:nowrap}
+.track{flex:1;height:10px;background:#3a4c63;border-radius:6px;overflow:hidden;position:relative}
+.fill{height:100%;background:var(--teal);width:0;transition:width .3s}
+.fill.over{background:var(--red)}
+.mat{border-left:0;background:var(--tint);border-radius:10px;padding:14px;margin:0 0 12px}
+.mat h3{margin-bottom:.4em}
+.mat p{margin:0 0 .55em}
+.mat .n{font-weight:700;color:var(--muted);font-size:.8rem;margin-right:.3em}
+.pill{display:inline-block;font-size:.78rem;font-weight:700;border-radius:20px;padding:3px 10px;background:var(--tint);color:var(--ink2);margin:0 6px 6px 0}
+.grid8{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+.grid8 div{background:var(--tint);border-radius:8px;padding:8px 10px;font-size:.9rem}
+.grid8 b{color:var(--red);margin-right:.35em}
+.fvi{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.fvi button{flex:1;min-width:92px;margin:0;text-align:center}
+.nota{font:700 3.4rem/1 Cambria,Georgia,serif;color:var(--amber)}
+.linha{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:8px 0}
+.linha b{white-space:nowrap}
+.dev{border-radius:10px;padding:12px 14px;margin:0 0 10px;background:var(--tint)}
+.dev.ok{background:#e6f3ee}.dev.meio{background:#fdf3df}.dev.no{background:#fbe9e6}
+.dev strong{display:block;margin-bottom:.2em}
+details{margin:0 0 12px}summary{cursor:pointer;font-weight:700}
+@media (max-width:480px){h1{font-size:1.6rem}.grid8{grid-template-columns:1fr}.btn .t{float:none;display:block;margin:4px 0 0}}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar" hidden><div class="in"><span class="clock" id="clock">0:00</span><div class="track" aria-hidden="true"><div class="fill" id="fill"></div></div><span class="lbl">de 12:00</span></div></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+<noscript><div class="wrap"><h1>Ensaio Geral</h1><p>Este jogo precisa de JavaScript ligado no navegador.</p></div></noscript>
+<script>
+(function(){
+"use strict";
+var F=["Veracidade e apuração dos fatos","Responsabilidade social e interesse público","Independência editorial","Ética jornalística e limites da atuação","Liberdade de imprensa e expressão","Jornalismo investigativo","Transparência e prestação de contas","Memória e testemunho"];
+var LIM=720;
+/* =====================================================================
+   OS CASOS. O espelho histórico de cada um é real. As matérias atuais,
+   as cidades, os veículos e as pessoas citadas nelas são fictícios.
+   Para acrescentar um caso, copie um bloco e troque o conteúdo.
+   ===================================================================== */
+var CASOS=[
+{id:"escola-base",nome:"Escola Base × a merenda de Santa Rita do Vale",
+ hist:{nome:"o caso Escola Base",ajuda:"São Paulo, 1994. A partir de uma denúncia e das declarações de um delegado, jornais e TVs trataram os donos de uma escola infantil como culpados de abuso sexual. O inquérito foi arquivado por falta de provas. A escola já tinha sido depredada e fechada.",q:"Que fundamento o caso Escola Base feriu de forma exemplar?",princ:3,viz:[0],
+  ok:"Fundamento 4. A Escola Base é o caso-escola do julgamento prévio: pessoas tratadas como culpadas antes de qualquer prova.",
+  vz:"Defensável, mas é o fundamento vizinho. Houve falha de apuração (fonte única, sem checagem), só que a ferida exemplar do caso é o dano a pessoas tratadas como culpadas: fundamento 4.",
+  no:"A banca esperava o fundamento 4, ética e limites: julgamento prévio e dano moral. A falha de apuração, fundamento 1, seria a segunda resposta aceitável."},
+ intro:"Um vereador protocolou no Ministério Público uma denúncia sobre a compra da merenda escolar de Santa Rita do Vale. Dois veículos da região publicaram no mesmo dia.",
+ A:{v:"Gazeta do Vale",t:"Prefeitura superfaturou merenda escolar em R$ 2 milhões",p:[
+  "A Prefeitura de Santa Rita do Vale superfaturou em R$ 2 milhões a compra da merenda escolar deste ano.",
+  "A informação consta de denúncia protocolada ontem no Ministério Público pelo vereador Dário Lemos (oposição).",
+  "Segundo ele, o quilo do frango foi pago a R$ 19,80, “o dobro do preço de mercado”.",
+  "O caso expõe o descaso da gestão com as crianças da rede municipal.",
+  "A secretária de Educação, Lúcia Paiva, apontada como responsável pelo esquema, não foi localizada até o fechamento desta edição.",
+  "A rede municipal atende 14 mil alunos."]},
+ B:{v:"Portal Serra Notícias",t:"MP recebe denúncia de sobrepreço na merenda; prefeitura contesta o cálculo",p:[
+  "O Ministério Público recebeu ontem uma denúncia de sobrepreço de R$ 2 milhões na compra da merenda escolar de Santa Rita do Vale, protocolada pelo vereador Dário Lemos (oposição).",
+  "A reportagem teve acesso à ata do pregão nº 14 e a três notas fiscais: o quilo do frango foi contratado a R$ 19,80.",
+  "No mesmo mês, a tabela de preços de referência do governo estadual indicava R$ 12,40 para o mesmo produto.",
+  "Em nota, a Secretaria de Educação afirma que o preço inclui entrega diária nas 42 escolas e que a comparação “ignora o frete”.",
+  "Para o economista Caio Brandão, da universidade regional, a diferença “é alta demais para ser explicada só pelo frete”.",
+  "O MP informou que vai analisar a denúncia em até 30 dias. Ainda não há investigação aberta, e a reportagem não conseguiu confirmar o valor total de R$ 2 milhões, que é uma estimativa do vereador."]},
+ rodadas:[
+  {f:0,q:"Fundamento 1, veracidade e apuração. Qual veículo apurou melhor?",v:"B",ok:"b2",meio:"b3",ev:["b2","b3","b5","a6"],
+   bom:"A ata do pregão e as notas fiscais são o que separa apurar de repassar. O Portal foi ao documento; a Gazeta ficou na denúncia.",pq:"A prova do fundamento 1 está em como o veículo chegou ao dado: “teve acesso à ata do pregão e a três notas fiscais”."},
+  {f:3,q:"Fundamento 4, ética e limites. Qual veículo feriu o fundamento de forma mais clara?",v:"A",ok:"ta",ev:["ta","a3","a6","b4"],
+   bom:"O título afirma como fato o que é uma denúncia ainda não analisada. É julgamento prévio na parte mais lida da matéria.",pq:"O trecho que prova a ferida é o título da Gazeta: “Prefeitura superfaturou”. A fala do vereador está atribuída corretamente, e os outros trechos não tratam da dignidade de ninguém."},
+  {f:6,q:"Fundamento 7, transparência e prestação de contas. Qual veículo foi mais transparente com o leitor?",v:"B",ok:"b6",meio:"b2",ev:["b6","b2","b4","a2"],
+   bom:"O Portal diz o que não conseguiu confirmar e de quem é a estimativa. Dizer o que ainda não se sabe é prestar contas.",pq:"A prova mais forte é o parágrafo final do Portal, que admite o que não confirmou. Explicar como soube do preço também é transparência, mas vale menos aqui."}],
+ fvi:[{tx:"“O quilo do frango foi contratado a R$ 19,80”, conforme a ata do pregão e três notas fiscais.",c:"fato"},
+  {tx:"“O preço inclui entrega diária nas 42 escolas”, segundo nota da Secretaria de Educação.",c:"versao"},
+  {tx:"“A diferença é alta demais para ser explicada só pelo frete”, na avaliação do economista.",c:"interp"}],
+ fviFb:"O preço na ata é fato: confere-se em documento. A explicação do frete é versão: relato de um envolvido. A avaliação do economista é interpretação: leitura do que o fato significa.",
+ dif:[{k:"bom1",tx:"O título da Gazeta afirma o superfaturamento; o do Portal atribui a denúncia e registra a contestação."},
+  {k:"x1",tx:"O texto do Portal é mais longo que o da Gazeta."},
+  {k:"bom2",tx:"O Portal publica a resposta da Secretaria; a Gazeta diz que não localizou a secretária e a chama de responsável."},
+  {k:"x2",tx:"A Gazeta informa quantos alunos a rede tem; o Portal não."},
+  {k:"x3",tx:"Os dois citam o mesmo vereador como autor da denúncia."}],
+ difNo:"Tamanho do texto, número de alunos e o fato de os dois citarem o mesmo vereador não mudam a leitura. O que muda é o verbo do título e quem foi ouvido.",
+ reflexo:{mec:"A Gazeta repete o mecanismo da Escola Base: uma fonte acusadora vira título afirmativo antes de qualquer apuração. O Portal mostra a lição aplicada: atribui, confere em documento, ouve o acusado e diz o que não sabe.",
+  tema:"Os dois casos envolvem escolas e crianças, o que mostra que o tema continua atual trinta anos depois.",
+  moral:"Os dois casos provam que a imprensa precisa ter mais ética e mais responsabilidade com o que publica.",
+  fb:"É o encontro dos dois atos: o mesmo mecanismo, fonte acusadora que vira título afirmativo, aparece nos dois casos, e uma das coberturas mostra a lição aprendida."},
+ perg:{q:"Um colega levanta a mão: “E se a denúncia do vereador for verdadeira? A Gazeta não terá acertado?”",
+  certo:"Acertar o fato não corrige o método. A Gazeta afirmou o que não tinha como saber naquele dia; se der certo, terá sido sorte, não apuração.",
+  e1:"Sim. Se a investigação confirmar, a Gazeta estava certa desde o início e deu o furo.",
+  e2:"Ainda não dá para saber, então por enquanto as duas coberturas se equivalem.",
+  ok:"Estar certo não é estar justificado. O fundamento 1 trata do método de verificação, não do resultado.",
+  no:"A resposta que a banca esperava separa resultado de método: mesmo que a denúncia se confirme, a Gazeta afirmou o que não tinha como saber naquele dia. E as duas coberturas não se equivalem: uma atribui e confere, a outra afirma."}},
+
+{id:"watergate",nome:"Watergate × o contrato do lixo de Porto das Pedras",
+ hist:{nome:"o caso Watergate",ajuda:"Washington, 1972. Dois repórteres do Washington Post seguiram por dois anos a pista de um arrombamento na sede do Partido Democrata, contra desmentidos seguidos da Casa Branca. A apuração expôs o envolvimento do governo, e o presidente Richard Nixon renunciou em 1974.",q:"Que fundamento o caso Watergate consagrou de forma exemplar?",princ:5,viz:[2,4],
+  ok:"Fundamento 6. Watergate é o caso-escola da investigação que traz à luz o que o poder queria oculto.",
+  vz:"Defensável, mas é o fundamento vizinho. O jornal resistiu à pressão do governo, e isso é verdade; só que a lição exemplar do caso é a investigação que expõe abuso de poder: fundamento 6.",
+  no:"A banca esperava o fundamento 6, jornalismo investigativo. Independência editorial (3) e liberdade de imprensa (5) seriam respostas vizinhas aceitáveis."},
+ intro:"A Prefeitura de Porto das Pedras trocou a empresa que faz a coleta de lixo da cidade. Dois veículos locais publicaram sobre o novo contrato na mesma semana.",
+ A:{v:"Diário do Porto",t:"Nova empresa de coleta vai economizar R$ 6 milhões, anuncia prefeitura",p:[
+  "A troca da empresa de coleta de lixo vai gerar economia de R$ 6 milhões por ano aos cofres de Porto das Pedras, informou ontem a prefeitura.",
+  "O contrato com a Limpa Mais foi assinado na segunda-feira, em cerimônia no gabinete do prefeito Júlio Sarmento.",
+  "“É o contrato mais vantajoso da história da cidade”, disse o prefeito.",
+  "Para o consultor em gestão pública Ivo Tavares, a troca “mostra uma administração moderna”.",
+  "O Diário do Porto é parceiro da campanha municipal Cidade Limpa.",
+  "A cidade produz 180 toneladas de lixo por dia."]},
+ B:{v:"Folha da Baía",t:"Contrato do lixo foi assinado sem licitação com empresa aberta há quatro meses",p:[
+  "A Prefeitura de Porto das Pedras contratou sem licitação a Limpa Mais, empresa aberta há quatro meses, para a coleta de lixo da cidade.",
+  "A reportagem obteve o contrato pela Lei de Acesso à Informação e consultou o registro da empresa na Junta Comercial.",
+  "O documento prevê pagamento de R$ 31 milhões por ano; o contrato anterior custava R$ 29 milhões, segundo o Portal da Transparência.",
+  "A prefeitura afirma que a dispensa de licitação se justifica pela “situação de emergência” e que a economia virá “a partir do segundo ano”.",
+  "Um dos sócios da Limpa Mais doou para a campanha do prefeito em 2024, conforme a prestação de contas entregue à Justiça Eleitoral.",
+  "Procurado, o sócio não respondeu. A reportagem não encontrou indício de que a doação tenha influenciado a escolha da empresa."]},
+ rodadas:[
+  {f:5,q:"Fundamento 6, jornalismo investigativo. Qual veículo foi além do que lhe entregaram?",v:"B",ok:"b2",meio:"b5",ev:["b2","b5","b4","a2"],
+   bom:"Pedir o contrato pela Lei de Acesso e consultar a Junta Comercial é apuração própria. O Diário trabalhou só com o que a prefeitura anunciou.",pq:"A prova do fundamento 6 está no caminho da apuração: “obteve o contrato pela Lei de Acesso à Informação e consultou o registro da empresa”."},
+  {f:2,q:"Fundamento 3, independência editorial. Qual veículo mostra menos autonomia em relação à prefeitura?",v:"A",ok:"a5",meio:"a1",ev:["a5","a1","a6","b4"],
+   bom:"O jornal é parceiro de uma campanha da própria prefeitura que cobre. O vínculo está escrito na matéria.",pq:"A prova mais forte é o vínculo declarado: “é parceiro da campanha municipal Cidade Limpa”. Repetir o número da prefeitura sem conferir também pesa, mas vale menos aqui."},
+  {f:0,q:"Fundamento 1, veracidade e apuração. Qual veículo conferiu o número da economia?",v:"B",ok:"b3",ev:["b3","b1","a3","a4"],
+   bom:"A Folha pôs lado a lado o valor do contrato novo e o do antigo, com a fonte de cada um. A economia anunciada não aparece na conta.",pq:"A prova é a comparação de valores com fonte: R$ 31 milhões no contrato novo, R$ 29 milhões no anterior, “segundo o Portal da Transparência”."}],
+ fvi:[{tx:"“O documento prevê pagamento de R$ 31 milhões por ano”, conforme o contrato obtido pela reportagem.",c:"fato"},
+  {tx:"“A economia virá a partir do segundo ano”, afirma a prefeitura.",c:"versao"},
+  {tx:"“A troca mostra uma administração moderna”, na avaliação do consultor.",c:"interp"}],
+ fviFb:"O valor no contrato é fato: está no documento. A promessa de economia é versão: relato de quem assinou o contrato. A fala do consultor é interpretação: um juízo sobre o que o fato significa.",
+ dif:[{k:"bom1",tx:"O título do Diário repete o anúncio da prefeitura; o da Folha traz o que a prefeitura não anunciou."},
+  {k:"x1",tx:"A Folha é mais crítica ao prefeito do que o Diário."},
+  {k:"bom2",tx:"A Folha confere o valor em documento; o Diário publica a economia sem conferir."},
+  {k:"x2",tx:"O Diário informa quanto lixo a cidade produz; a Folha não."},
+  {k:"x3",tx:"Os dois tratam da mesma empresa e do mesmo contrato."}],
+ difNo:"“Mais crítica” é impressão, não diferença demonstrável; a quantidade de lixo e o fato de os dois tratarem do mesmo contrato não mudam a leitura. O que muda é de onde vem a informação do título e se o número foi conferido.",
+ reflexo:{mec:"Como no Watergate, o que importava não estava no anúncio oficial: estava em documentos que alguém precisou ir buscar. A Folha foi buscar; o Diário ficou com a versão de quem tem interesse nela.",
+  tema:"Os dois casos tratam de política e de governantes sob suspeita, o que mostra que a corrupção atravessa as épocas.",
+  moral:"Os dois casos provam que a imprensa precisa fiscalizar mais o poder.",
+  fb:"É o encontro dos dois atos: nos dois casos a notícia estava em documentos fora do anúncio oficial, e só uma das coberturas foi atrás deles."},
+ perg:{q:"Um colega levanta a mão: “E se o contrato for mesmo vantajoso? O Diário não terá informado certo?”",
+  certo:"O Diário não informou, repassou: publicou o número de quem tinha interesse nele, sem conferir. Se o contrato for bom, a matéria continua sem apuração.",
+  e1:"Sim. Nesse caso o Diário deu a notícia certa, e a Folha criou suspeita à toa.",
+  e2:"Ainda não dá para saber, então por enquanto as duas coberturas se equivalem.",
+  ok:"Repassar um anúncio não é apurar. A Folha, aliás, não afirmou irregularidade: mostrou documentos e disse o que não encontrou.",
+  no:"A resposta que a banca esperava separa resultado de método: o Diário publicou o número da parte interessada sem conferir, e isso não muda se o contrato for bom. A Folha não criou suspeita: mostrou documentos e registrou o que não encontrou."}},
+
+{id:"dewey",nome:"“Dewey derrota Truman” × o desabamento em Campo Belo",
+ hist:{nome:"a manchete “Dewey derrota Truman”",ajuda:"Chicago, 1948. Com o fechamento antecipado por causa de uma greve de gráficos, o Chicago Daily Tribune imprimiu a manchete “Dewey derrota Truman” com base nos primeiros resultados e nas pesquisas. Truman venceu a eleição. A foto dele rindo com o jornal na mão virou símbolo da notícia publicada antes do fato.",q:"Que fundamento a manchete do Tribune feriu de forma exemplar?",princ:0,viz:[],
+  ok:"Fundamento 1. O Tribune publicou como fato o que era previsão: o caso-escola da notícia sem verificação.",
+  vz:"",
+  no:"A banca esperava o fundamento 1, veracidade e apuração: o jornal imprimiu como fato um resultado que ainda não existia."},
+ intro:"A marquise de um prédio desabou no centro de Campo Belo e matou quatro pessoas. Dois veículos publicaram na mesma noite.",
+ A:{v:"Jornal da Serra",t:"Falha de engenheiro causa desabamento que matou quatro",p:[
+  "Um erro de cálculo do engenheiro responsável causou o desabamento da marquise do Edifício Aurora, que matou quatro pessoas ontem no centro de Campo Belo.",
+  "A informação é de um bombeiro que participou do resgate e pediu para não ser identificado.",
+  "O engenheiro Paulo Rezende, de 52 anos, assinou a reforma do prédio em 2023.",
+  "Moradores disseram que a marquise “já vinha rachando havia meses”.",
+  "A reportagem não conseguiu contato com o engenheiro.",
+  "O Edifício Aurora tem 12 andares e foi inaugurado em 1978."]},
+ B:{v:"Agência Planalto",t:"Marquise desaba e mata quatro; causa será apontada por perícia em 30 dias",p:[
+  "A marquise do Edifício Aurora, no centro de Campo Belo, desabou ontem às 17h40 e matou quatro pessoas, segundo o Corpo de Bombeiros.",
+  "A causa ainda não é conhecida. A Defesa Civil informou que o laudo da perícia deve sair em 30 dias.",
+  "O comandante dos bombeiros, major Luís Arruda, disse que “é cedo para apontar responsáveis”.",
+  "Moradores relataram rachaduras; a reportagem viu duas reclamações registradas na prefeitura em março e junho deste ano.",
+  "O engenheiro que assinou a reforma de 2023, Paulo Rezende, afirmou por telefone que a obra “não mexeu na marquise” e que vai colaborar com a perícia.",
+  "Até as 22h, três das quatro vítimas tinham sido identificadas. Esta reportagem será atualizada."]},
+ rodadas:[
+  {f:0,q:"Fundamento 1, veracidade e apuração. Qual veículo afirmou mais do que podia provar?",v:"A",ok:"ta",meio:"a2",ev:["ta","a2","a6","a4"],
+   bom:"O título crava a causa de um desabamento ocorrido horas antes, sem perícia. É a previsão publicada como fato.",pq:"A prova mais forte é o título, “Falha de engenheiro causa desabamento”. A fonte única e anônima explica por que a afirmação não se sustenta, mas a ferida está no que foi afirmado."},
+  {f:3,q:"Fundamento 4, ética e limites. Qual veículo expôs uma pessoa a julgamento antecipado?",v:"A",ok:"a3",meio:"a5",ev:["a3","a5","a4","b5"],
+   bom:"Nome, idade e profissão de uma pessoa, ligados a uma causa que ninguém apurou. É a exposição que o fundamento 4 manda evitar.",pq:"A prova é o parágrafo que identifica o engenheiro pelo nome e pela idade logo depois de atribuir a ele o erro. Publicar sem ouvi-lo agrava, mas a exposição está na identificação."},
+  {f:6,q:"Fundamento 7, transparência e prestação de contas. Qual veículo deixou claro o que ainda não se sabe?",v:"B",ok:"b2",meio:"b6",ev:["b2","b6","b3","b4"],
+   bom:"A Agência diz com todas as letras que a causa não é conhecida e quando se vai saber. É transparência sobre o limite da própria apuração.",pq:"A prova mais forte é “A causa ainda não é conhecida”, com o prazo do laudo. Avisar que a reportagem será atualizada também é transparência, mas vale menos aqui."}],
+ fvi:[{tx:"“A marquise desabou às 17h40 e matou quatro pessoas”, segundo o registro do Corpo de Bombeiros.",c:"fato"},
+  {tx:"“A obra não mexeu na marquise”, afirma o engenheiro.",c:"versao"},
+  {tx:"“Um erro de cálculo causou o desabamento”, na leitura de quem participou do resgate.",c:"interp"}],
+ fviFb:"Horário e número de mortos são fato: constam de registro oficial. A fala do engenheiro é versão: relato de um envolvido. Atribuir a causa a um erro de cálculo, antes da perícia, é interpretação: uma leitura do que o fato significa.",
+ dif:[{k:"bom1",tx:"O título do Jornal da Serra crava a causa; o da Agência diz que ela depende de perícia."},
+  {k:"x1",tx:"O Jornal informa o ano de inauguração do prédio; a Agência não."},
+  {k:"bom2",tx:"A Agência ouviu o engenheiro; o Jornal publicou o nome dele sem ouvi-lo."},
+  {k:"x2",tx:"Os dois falam em quatro mortos."},
+  {k:"x3",tx:"O texto da Agência traz mais horários do que o do Jornal."}],
+ difNo:"Ano de inauguração, quantidade de horários e o fato de os dois darem o mesmo número de mortos não mudam a leitura. O que muda é a causa cravada no título e se o acusado foi ouvido.",
+ reflexo:{mec:"O Jornal da Serra faz o que o Tribune fez: publica como fato o que ainda é previsão, porque não quis esperar. A Agência mostra a alternativa: dizer o que se sabe, o que não se sabe e quando se vai saber.",
+  tema:"Os dois casos mostram que jornais erram desde sempre, tanto em eleições quanto em tragédias.",
+  moral:"Os dois casos provam que a imprensa precisa ser mais responsável com o que publica.",
+  fb:"É o encontro dos dois atos: a previsão publicada como fato aparece nos dois casos, e uma das coberturas mostra como noticiar sem cravar o que não se sabe."},
+ perg:{q:"Um colega levanta a mão: “E se a perícia concluir que o engenheiro errou? O Jornal da Serra não terá acertado?”",
+  certo:"Acertar depois não corrige o método. Naquela noite ninguém tinha como saber a causa; o Jornal apostou, e a aposta levou o nome de uma pessoa.",
+  e1:"Sim. Se o laudo confirmar, o Jornal deu o furo e a Agência ficou para trás.",
+  e2:"Ainda não dá para saber, então por enquanto as duas coberturas se equivalem.",
+  ok:"O Tribune também poderia ter acertado. A ferida não está no resultado, e sim em publicar como fato o que ainda não era.",
+  no:"A resposta que a banca esperava separa resultado de método: naquela noite ninguém tinha como saber a causa. E as duas coberturas não se equivalem: uma crava e expõe, a outra diz o que não sabe."}},
+
+{id:"jimmy",nome:"“Jimmy's World” × a fila de cirurgias de Monte Alegre",
+ hist:{nome:"o caso “Jimmy's World”",ajuda:"Washington, 1980. O Washington Post publicou “Jimmy's World”, de Janet Cooke, sobre um menino de 8 anos viciado em heroína. A reportagem ganhou o Pulitzer em 1981. O menino não existia. O jornal devolveu o prêmio e publicou uma longa investigação do próprio ombudsman sobre como a história passou pela redação.",q:"Que fundamento a reação do jornal ao caso consagrou?",princ:6,viz:[0],
+  ok:"Fundamento 7. Devolver o prêmio e publicar a investigação do próprio erro é o caso-escola da prestação de contas.",
+  vz:"Defensável, mas é o fundamento vizinho. A reportagem feriu a veracidade, e isso é verdade; só que a pergunta é sobre a reação do jornal, e ela consagrou a prestação de contas: fundamento 7.",
+  no:"A banca esperava o fundamento 7, transparência e prestação de contas: o jornal admitiu o erro e explicou em público como ele aconteceu. Veracidade (1) seria a resposta vizinha aceitável."},
+ intro:"Ontem, dois veículos de Monte Alegre publicaram que a fila de cirurgias do Hospital Regional tinha 12 mil pacientes. O número estava errado. Estas são as páginas que cada um mantém no ar hoje.",
+ A:{v:"Correio de Monte Alegre",t:"Fila de cirurgias no Hospital Regional tem 1.200 pacientes",p:[
+  "A fila de espera por cirurgias eletivas no Hospital Regional de Monte Alegre tem 1.200 pacientes, segundo a Secretaria de Saúde.",
+  "O tempo médio de espera é de sete meses.",
+  "A secretaria atribui a demora à falta de anestesistas.",
+  "“Estamos contratando”, disse o secretário Mauro Teles.",
+  "O hospital atende 23 municípios da região.",
+  "Atualizado às 9h12."]},
+ B:{v:"Rádio Cidade Online",t:"Erramos: fila de cirurgias tem 1.200 pacientes, não 12 mil",p:[
+  "A fila de espera por cirurgias eletivas no Hospital Regional de Monte Alegre tem 1.200 pacientes, e não 12 mil, como este site publicou ontem.",
+  "O erro foi nosso: a reportagem leu como total da fila o número de atendimentos do ano, que aparece na mesma tabela da Secretaria de Saúde.",
+  "O número errado ficou no ar por seis horas e foi reproduzido por outros veículos da região.",
+  "A planilha original está disponível neste link, com as duas colunas indicadas.",
+  "O tempo médio de espera, de sete meses, estava correto e não muda.",
+  "A secretaria atribui a demora à falta de anestesistas; para a pesquisadora em saúde pública Lia Moura, a fila “é sintoma de falta de planejamento, não de um problema só”."]},
+ rodadas:[
+  {f:6,q:"Fundamento 7, transparência e prestação de contas. Qual veículo prestou contas do erro ao leitor?",v:"B",ok:"b2",meio:"b1",ev:["b2","b1","b5","a6"],
+   bom:"O site não só admite: explica como o erro aconteceu. É o que permite ao leitor avaliar o resto do trabalho.",pq:"A prova mais forte é a explicação do erro: “a reportagem leu como total da fila o número de atendimentos do ano”. Admitir que errou também conta, mas vale menos sem o como."},
+  {f:0,q:"Fundamento 1, veracidade e apuração. Qual veículo ouviu mais de uma fonte sobre a causa da demora?",v:"B",ok:"b6",ev:["b6","a3","a4","b5"],
+   bom:"A secretaria dá uma causa; a pesquisadora dá outra leitura. O Correio ficou só com a explicação da parte interessada.",pq:"A prova é o parágrafo que põe a explicação da secretaria ao lado da avaliação de uma pesquisadora independente. No Correio, a única voz sobre a causa é a da secretaria."},
+  {f:7,q:"Fundamento 8, o jornalismo como registro. Qual veículo apagou o rastro do que tinha publicado?",v:"A",ok:"a6",meio:"ta",ev:["a6","ta","a1","b3"],
+   bom:"“Atualizado às 9h12” é tudo o que resta do número de ontem. Quem leu 12 mil não tem como saber que a página mudou de conteúdo.",pq:"A prova mais forte é a única marca da mudança, “Atualizado às 9h12”. O título com o número novo, sem menção ao antigo, mostra o mesmo apagamento, mas vale menos sozinho."}],
+ fvi:[{tx:"“A fila tem 1.200 pacientes”, conforme a planilha da Secretaria de Saúde.",c:"fato"},
+  {tx:"“A demora se deve à falta de anestesistas”, segundo a secretaria.",c:"versao"},
+  {tx:"“A fila é sintoma de falta de planejamento”, na avaliação da pesquisadora.",c:"interp"}],
+ fviFb:"O número na planilha é fato: confere-se no documento. A causa apontada pela secretaria é versão: relato de quem responde pela fila. A fala da pesquisadora é interpretação: leitura do que o fato significa.",
+ dif:[{k:"bom1",tx:"O título do site assume o erro; o do Correio traz o número novo como se nada tivesse acontecido."},
+  {k:"x1",tx:"O Correio informa quantos municípios o hospital atende; o site não."},
+  {k:"bom2",tx:"O site explica como errou e mostra a planilha; o Correio só registra o horário da atualização."},
+  {k:"x2",tx:"Os dois dão hoje o mesmo número de pacientes."},
+  {k:"x3",tx:"O texto do site é mais longo que o do Correio."}],
+ difNo:"Número de municípios, tamanho do texto e o fato de os dois darem hoje o mesmo número não mudam a leitura. O que muda é se o veículo diz ao leitor que errou e mostra como.",
+ reflexo:{mec:"O site faz em pequena escala o que o Post fez em 1981: diz que errou, explica como e mostra o documento. O Correio corrige o número e apaga o rastro, e o leitor de ontem nunca fica sabendo.",
+  tema:"Os dois casos tratam de erros de jornais em temas de saúde, o que mostra que errar é comum na imprensa.",
+  moral:"Os dois casos provam que a imprensa precisa ter mais cuidado para não errar.",
+  fb:"É o encontro dos dois atos: o que distingue os veículos não é ter errado, e sim o que cada um fez depois do erro."},
+ perg:{q:"Um colega levanta a mão: “Mas hoje os dois estão com o número certo. Que diferença faz para o leitor?”",
+  certo:"Quem leu 12 mil ontem só descobre o erro em um dos dois. Corrigir o número sem dizer que errou conserta a página, não a informação que já circulou.",
+  e1:"Nenhuma. O que importa é que a informação no ar agora está correta nos dois.",
+  e2:"O site se expôs à toa: admitir erro em público só diminui a confiança do leitor.",
+  ok:"A correção existe para o leitor que já foi informado errado. Sem aviso, ele continua com o número antigo.",
+  no:"A resposta que a banca esperava olha para o leitor de ontem: ele só descobre o erro onde há errata. E o caso do Post mostra o contrário do receio: prestar contas é o que sustenta a confiança."}}
+];
+var KEY="ensaio-geral:vistos",S,C;
+function vistos(){try{var v=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(v)?v:[];}catch(e){return[];}}
+function sortear(evitar){var v=vistos(),livres=CASOS.filter(function(c){return v.indexOf(c.id)<0&&c.id!==evitar;});
+ if(!livres.length){v=[];livres=CASOS.filter(function(c){return c.id!==evitar;});}
+ var c=livres[Math.floor(Math.random()*livres.length)];v.push(c.id);try{localStorage.setItem(KEY,JSON.stringify(v));}catch(e){}return c;}
+function novo(caso){C=caso;S={i:-1,r:{},fim:false,ord:{}};}
+function ord(id,l){if(!S.ord[id]){var a=l.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}S.ord[id]=a;}return S.ord[id];}
+function trecho(k){if(k==="ta")return "Título: “"+C.A.t+"” ("+C.A.v+")";if(k==="tb")return "Título: “"+C.B.t+"” ("+C.B.v+")";
+ var m=k.charAt(0)==="a"?C.A:C.B;return "“"+m.p[Number(k.charAt(1))-1]+"” ("+m.v+")";}
+var RESUMO=[{k:"longo",s:270,tx:"Contar a história inteira, em ordem, com todos os personagens e detalhes."},
+ {k:"licao",s:160,tx:"Resumir em três movimentos: o que aconteceu, como a imprensa agiu e o que ficou de lição."},
+ {k:"nome",s:50,tx:"Só citar o caso, que todo mundo conhece, e ir logo para as matérias atuais."}];
+var FALAS=[{k:"um",tx:"Quem fala melhor apresenta tudo; os outros ficam de apoio."},
+ {k:"todos",tx:"Cada ato fica com integrantes diferentes, e os cinco falam."},
+ {k:"slides",tx:"Uma pessoa apresenta, outra passa os slides, as demais respondem perguntas se houver."}];
+var TR={mec:160,tema:90,moral:120};
+var PASSOS=["falas","resumo","fund","ler","r0","r1","r2","fvi","dif","reflexo","perg"];
+function mmss(s){var m=Math.floor(s/60),x=s%60;return m+":"+(x<10?"0":"")+x;}
+function achar(l,k){for(var i=0;i<l.length;i++)if(l[i].k===k)return l[i];}
+function tempo(){var t=0,r=S.r;
+ if(r.resumo)t+=achar(RESUMO,r.resumo).s;
+ [0,1,2].forEach(function(n){var x=r["r"+n];if(x&&x.ev)t+=x.ev==="sem"?50:90;});
+ if(r.fvi&&Object.keys(r.fvi).length===3)t+=30;
+ if(r.dif)t+=30*r.dif.length;
+ if(r.reflexo)t+=TR[r.reflexo];
+ return t;}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+var app=document.getElementById("app"),bar=document.getElementById("bar");
+function relogio(){var t=tempo();document.getElementById("clock").textContent=mmss(t);
+ var f=document.getElementById("fill");f.style.width=Math.min(100,t/LIM*100)+"%";f.className="fill"+(t>LIM?" over":"");}
+function materia(m){var h='<div class="mat"><p class="kicker" style="color:var(--muted)">'+esc(m.v)+'</p><h3>'+esc(m.t)+'</h3>';
+ m.p.forEach(function(p,i){h+='<p><span class="n">'+(i+1)+'</span>'+esc(p)+'</p>';});return h+'</div>';}
+function materias(){return '<details><summary>As duas matérias</summary>'+materia(C.A)+materia(C.B)+'</details>';}
+function botoes(lista,sel,nome){return lista.map(function(o){var on=Array.isArray(sel)?sel.indexOf(o.k)>=0:sel===o.k;
+ return '<button class="btn'+(o.k==="sem"?" sem":"")+'" data-'+nome+'="'+o.k+'" aria-pressed="'+on+'">'+(o.s?'<span class="t">'+mmss(o.s)+'</span>':'')+esc(o.tx)+'</button>';}).join("");}
+
+function capa(){bar.hidden=true;
+ return '<div class="card dark"><p class="kicker">Fundamentos de Jornalismo · PUC-Campinas · 2026/2</p><h1>Ensaio Geral</h1><p>O Comparativo em três atos, antes de valer nota.</p><p class="muted small">Você comanda um grupo que apresenta daqui a pouco. São 12 minutos, três atos e uma banca que conhece a régua. Cada decisão gasta tempo e mexe na nota.</p></div>'+
+ '<div class="card"><p class="kicker">Caso sorteado · um de '+CASOS.length+'</p><h2>'+esc(C.nome)+'</h2><p class="muted small">Cada ensaio sorteia um caso diferente, até você passar por todos.</p><button class="go ghost" data-sortear="1">Sortear outro caso</button></div>'+
+ '<div class="card"><h2>Como funciona</h2><p><span class="pill">Ato 1 · 3 min</span><span class="pill">Ato 2 · 6 min</span><span class="pill">Ato 3 · 3 min</span></p><p>No Ato 1, o espelho histórico: um caso clássico contado como lição. No Ato 2, duas coberturas do mesmo fato lado a lado, com a ficha dos 8 fundamentos. No Ato 3, o reflexo: o que o caso antigo ilumina nas matérias de hoje.</p><p><strong>Regra de ouro da disciplina: veredicto sem citação não pontua.</strong></p><p class="small muted">Os casos históricos são reais. As matérias atuais, as cidades, os veículos e os personagens são inventados para o exercício. É treino: nada é enviado ao professor, e você pode jogar quantas vezes quiser.</p></div>'+
+ '<div class="card"><h3>A régua</h3><div class="grid8">'+F.map(function(f,i){return "<div><b>"+(i+1)+"</b>"+esc(f)+"</div>";}).join("")+'</div></div>'+
+ '<button class="go" data-ir="1">Começar o ensaio</button>';}
+
+function tela(){var id=PASSOS[S.i],r=S.r,h="",pronto=false;bar.hidden=false;
+ function k(t){h+='<p class="kicker">'+t+'</p>';}
+ if(id==="falas"){k("Antes de subir");h+='<div class="card"><h2>Quem fala na apresentação?</h2><p class="muted">O grupo tem cinco pessoas. A rubrica reserva 1 ponto para a participação equilibrada.</p>'+botoes(ord(id,FALAS),r.falas,"op")+'</div>';pronto=r.falas!=null;}
+ else if(id==="resumo"){k("Ato 1 · o espelho histórico · meta de 3 min");h+='<div class="card"><h2>Como o grupo conta '+esc(C.hist.nome)+'?</h2><p class="muted">'+esc(C.hist.ajuda)+'</p>'+botoes(ord(id,RESUMO),r.resumo,"op")+'</div>';pronto=r.resumo!=null;}
+ else if(id==="fund"){k("Ato 1 · o espelho histórico");h+='<div class="card"><h2>'+esc(C.hist.q)+'</h2><p class="muted">O Ato 1 termina com uma lição. É ela que o Ato 3 vai retomar.</p>'+botoes(F.map(function(f,i){return{k:String(i),tx:(i+1)+". "+f};}),r.fund,"op")+'</div>';pronto=r.fund!=null;}
+ else if(id==="ler"){k("Ato 2 · a comparação atual · meta de 6 min");h+='<div class="card"><h2>O fato e as duas coberturas</h2><p>'+esc(C.intro)+' Leia com calma: os trechos numerados são a sua matéria-prima no resto do ato.</p>'+materia(C.A)+materia(C.B)+'</div>';pronto=true;}
+ else if(id.charAt(0)==="r"&&id.length===2){var n=Number(id.charAt(1)),R=C.rodadas[n],x=r[id]||{};k("Ato 2 · julgamento "+(n+1)+" de 3");
+  h+=materias()+'<div class="card"><h2>'+esc(R.q)+'</h2>'+botoes([{k:"A",tx:C.A.v},{k:"B",tx:C.B.v}],x.v,"v")+'</div>';
+  h+='<div class="card"><h3>Que trecho vai para o slide como prova?</h3><p class="muted small">Todos os trechos são verdadeiros. Só um sustenta este julgamento. Com citação, o julgamento ocupa 1:30.</p>'+botoes(ord(id,R.ev).map(function(e){return{k:e,tx:trecho(e)};}).concat([{k:"sem",tx:"Apresentar o veredicto sem projetar trecho, para ganhar tempo (0:50)."}]),x.ev,"ev")+'</div>';
+  pronto=!!(x.v&&x.ev);}
+ else if(id==="fvi"){var y=r.fvi||{};k("Ato 2 · fato, versão, interpretação");h+='<div class="card"><h2>Fato, versão ou interpretação?</h2><p class="muted">A ficha pede um exemplo de cada. Classifique os três trechos (0:30).</p>';
+  C.fvi.forEach(function(s,i){h+='<p>'+esc(s.tx)+'</p><div class="fvi">'+[["fato","Fato"],["versao","Versão"],["interp","Interpretação"]].map(function(o){return '<button class="btn" data-fvi="'+i+":"+o[0]+'" aria-pressed="'+(y[i]===o[0])+'">'+o[1]+'</button>';}).join("")+'</div>';});
+  h+='</div>';pronto=Object.keys(y).length===3;}
+ else if(id==="dif"){k("Ato 2 · a comparação");h+=materias()+'<div class="card"><h2>Quais duas diferenças entre as coberturas o grupo põe no slide?</h2><p class="muted">Escolha duas. Cada uma ocupa 30 segundos.</p>'+botoes(ord(id,C.dif),r.dif||[],"op")+'</div>';pronto=r.dif&&r.dif.length===2;}
+ else if(id==="reflexo"){k("Ato 3 · o reflexo · meta de 3 min");h+='<div class="card"><h2>Como o grupo liga o caso histórico às matérias de hoje?</h2>'+botoes(ord(id,[{k:"mec",s:TR.mec,tx:C.reflexo.mec},{k:"tema",s:TR.tema,tx:C.reflexo.tema},{k:"moral",s:TR.moral,tx:C.reflexo.moral}]),r.reflexo,"op")+'</div>';pronto=r.reflexo!=null;}
+ else{k("Perguntas · 3 min");h+='<div class="card"><h2>'+esc(C.perg.q)+'</h2>'+botoes(ord(id,[{k:"certo",tx:C.perg.certo},{k:"e1",tx:C.perg.e1},{k:"e2",tx:C.perg.e2}]),r.perg,"op")+'</div>';pronto=r.perg!=null;}
+ h+='<button class="go" data-ir="1"'+(pronto?"":" disabled")+'>'+(S.i===PASSOS.length-1?"Encerrar e ouvir a banca":"Seguir")+'</button>';
+ h+='<p style="margin-top:10px"><button class="go ghost" data-ir="-1">Voltar</button></p>';
+ return h;}
+
+function banca(){var r=S.r,d=[],regua=0,comp=0,art=0,clar=0,part=0,t=tempo();
+ function v(x){return String(Math.round(x*100)/100).replace(".",",");}
+ function add(c,t1,t2){d.push('<div class="dev '+c+'"><strong>'+t1+'</strong>'+esc(t2)+'</div>');}
+ C.rodadas.forEach(function(g,n){var x=r["r"+n],nome="Julgamento "+(n+1)+", fundamento "+(g.f+1);
+  if(x.ev==="sem"){add("no",nome+": 0 de 1,2","O grupo deu o veredicto sem projetar trecho. Pela regra de ouro, não pontua, mesmo que o veredicto esteja certo. Os 40 segundos economizados custaram o julgamento inteiro.");return;}
+  var p=0,tx;if(x.v===g.v)p+=.4;
+  if(x.v===g.v&&x.ev===g.ok){p+=.8;tx=g.bom;}
+  else if(x.v===g.v&&g.meio&&x.ev===g.meio){p+=.4;tx="O trecho ajuda, mas não é o mais forte. "+g.pq;}
+  else if(x.v===g.v){tx="Veredicto certo, prova errada. O trecho escolhido é verdadeiro, mas não sustenta o que o grupo afirmou. "+g.pq;}
+  else{tx="A banca discordou do veredicto, e a citação não o salvou. "+g.pq;}
+  regua+=p;add(p>=1.2?"ok":p>0?"meio":"no",nome+": "+v(p)+" de 1,2",tx);});
+ var ac=0;C.fvi.forEach(function(s,i){if(r.fvi[i]===s.c)ac++;});
+ var pf=ac===3?.4:ac===2?.2:0;regua+=pf;
+ add(ac===3?"ok":ac===2?"meio":"no","Fato, versão, interpretação: "+v(pf)+" de 0,4","Você acertou "+ac+" de 3. "+C.fviFb);
+ var bons=r.dif.filter(function(k){return k.indexOf("bom")===0;}).length;comp=bons;
+ add(bons===2?"ok":bons===1?"meio":"no","Qualidade da comparação: "+comp+" de 2,0",bons===2?"As duas diferenças escolhidas mudam o que o leitor entende do fato.":"A rubrica pede diferenças relevantes, não cosméticas. "+C.difNo);
+ var f1=Number(r.fund),H=C.hist,pa=f1===H.princ?1:H.viz.indexOf(f1)>=0?.5:0;
+ var txa=f1===H.princ?H.ok:H.viz.indexOf(f1)>=0?H.vz:H.no;
+ if(r.resumo==="nome"){pa=pa/2;txa+=" E como o grupo só citou o nome do caso, a lição não foi construída diante da plateia: vale metade.";}
+ var pr=r.reflexo==="mec"?1:r.reflexo==="tema"?.25:0;
+ if(r.resumo==="nome"&&pr>.5)pr=.5;
+ art=pa+pr;
+ add(pa>=1?"ok":pa>0?"meio":"no","Ato 1, a lição do espelho: "+v(pa)+" de 1,0",txa);
+ add(pr>=1?"ok":pr>0?"meio":"no","Ato 3, o reflexo: "+v(pr)+" de 1,0",r.reflexo==="mec"?(r.resumo==="nome"?"A ligação é a certa, mas chegou sem base: o Ato 1 não explicou o caso histórico, então o reflexo ficou pela metade.":C.reflexo.fb):r.reflexo==="tema"?"Coincidência de tema não é reflexo. A pergunta do Ato 3 é o que o caso antigo ensina a ver nas matérias de hoje, e a resposta está no mecanismo, não no assunto.":"Conclusão moral serve para qualquer par de casos, portanto não articula estes dois. A banca queria o mecanismo que se repete e o trecho que o mostra.");
+ var pt=t<=LIM?.5:t<=LIM+60?.25:0,pq=r.perg==="certo"?.5:0;clar=pt+pq;
+ add(pt>=.5?"ok":pt>0?"meio":"no","Gestão do tempo: "+v(pt)+" de 0,5","O grupo usou "+mmss(t)+" de 12:00."+(t>LIM?" Estourar o tempo desconta."+(r.resumo==="longo"?" O Ato 1 levou 4:30 para uma meta de 3: contar a história inteira é o jeito mais comum de perder o Ato 3.":""):" Coube.")+(t<540?" Sobrou muito tempo: provavelmente faltou evidência projetada ou espelho histórico.":""));
+ add(pq?"ok":"no","Domínio do conteúdo, na pergunta: "+v(pq)+" de 0,5",pq?C.perg.ok:C.perg.no);
+ part=r.falas==="todos"?1:r.falas==="slides"?.3:0;
+ add(part>=1?"ok":part>0?"meio":"no","Participação equilibrada: "+v(part)+" de 1,0",part>=1?"Os cinco falaram, um ato para cada parte do grupo.":"A rubrica pede participação equilibrada de todos os integrantes. Passar slide não é apresentar.");
+ var total=regua+comp+art+clar+part;bar.hidden=true;
+ return '<div class="card dark"><p class="kicker">A banca devolve</p><div class="nota">'+v(total)+'</div><p>de 10 pontos, em '+mmss(t)+' de apresentação.</p><p class="muted small">Caso: '+esc(C.nome)+'</p></div>'+
+ '<div class="card"><h2>A rubrica</h2>'+[["Régua dos 8 fundamentos, com evidência textual",regua,4],["Qualidade da comparação",comp,2],["Articulação entre o caso histórico e o atual",art,2],["Clareza, domínio do conteúdo e tempo",clar,1],["Participação equilibrada",part,1]].map(function(l){return '<div class="linha"><span>'+l[0]+'</span><b>'+v(l[1])+' de '+l[2]+',0</b></div>';}).join("")+'</div>'+
+ '<div class="card"><h2>Decisão por decisão</h2>'+d.join("")+'</div>'+
+ '<div class="card"><h2>Para a apresentação de verdade</h2><p>Ensaiem com cronômetro. O caso histórico entra como lição em três minutos, não como aula de história. Todo julgamento vai para a tela com o trecho que o prova, legível do fundo da sala. Escolham diferenças que mudam a leitura do fato. E fechem mostrando o mecanismo que se repete entre o caso antigo e o de hoje.</p></div>'+
+ '<button class="go" data-outro="1">Ensaiar com outro caso</button><p style="margin-top:10px"><button class="go ghost" data-repetir="1">Repetir este caso</button></p>'+
+ '<p class="small muted" style="margin-top:14px">Ensaio Geral, jogo de treino da disciplina Fundamentos de Jornalismo (PUC-Campinas, 2026/2), do Prof. Artur Araujo. Os casos históricos são reais. As matérias atuais, as cidades, os veículos e todas as pessoas citadas nelas são fictícios.</p>';}
+
+function render(){app.innerHTML=S.fim?banca():S.i<0?capa():tela();if(!S.fim&&S.i>=0)relogio();window.scrollTo(0,0);}
+function soBotoes(){var y=window.scrollY;app.innerHTML=tela();relogio();window.scrollTo(0,y);}
+app.addEventListener("click",function(ev){var b=ev.target.closest("button");if(!b)return;var d=b.dataset,id=PASSOS[S.i],r=S.r;
+ if(d.sortear||d.outro){novo(sortear(C.id));render();return;}
+ if(d.repetir){novo(C);render();return;}
+ if(d.ir){var p=S.i+Number(d.ir);if(p>=PASSOS.length)S.fim=true;else S.i=Math.max(-1,p);render();return;}
+ if(d.v){r[id]=r[id]||{};r[id].v=d.v;}
+ else if(d.ev){r[id]=r[id]||{};r[id].ev=d.ev;}
+ else if(d.fvi){var a=d.fvi.split(":");r.fvi=r.fvi||{};r.fvi[a[0]]=a[1];}
+ else if(d.op){if(id==="dif"){var l=r.dif||[],ix=l.indexOf(d.op);if(ix>=0)l.splice(ix,1);else if(l.length<2)l.push(d.op);r.dif=l;}else r[id]=d.op;}
+ else return;
+ soBotoes();});
+window.__casos=CASOS;
+novo(sortear(null));render();
+})();
+</script>
+</body>
+</html>
